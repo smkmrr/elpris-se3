@@ -26,6 +26,19 @@ def evaluate_one(daily, forecast_date):
 
     return merged[["forecast_date", "horizon", "target_date", "err_mean", "err_max", "err_min"]]
 
+
+def evaluate_many(daily, forecast_dates):
+    results = []
+    for d in forecast_dates:
+        results.append(evaluate_one(daily, d))
+    return pd.concat(results, ignore_index=True)
+
+
+def mae_table(errors):
+    return errors.groupby("horizon")[["err_mean", "err_max", "err_min"]].mean()
+
 if __name__ == "__main__":
     daily =pd.read_csv("data/sample_daily_prices.csv")
-    print(evaluate_one(daily, "2026-09-28"))
+    dates = pd.date_range("2026-09-20", "2026-09-23")
+    errors = evaluate_many(daily, dates)
+    print(mae_table(errors))
