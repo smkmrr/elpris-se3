@@ -3,7 +3,7 @@
 **Källa**: Elpriset just nu, API för elområde SE3 (https://www.elprisetjustnu.se/elpris-api) 
 **Ägare**: Tjänsten drivs av Beneficial Apps AS. Prisdatan kommer ursprungligen från ENTSO-E (entsoe.eu). 
 **Villkor**: Öppet och gratis att använda. Vi anger Elpriset just nu som källa. 
-**Period**: 2022-11-01 till pågående 
+**Period**: 2021-11-01 till pågående 
 **Innehåll**: Spotpris i SEK per kWh, exklusive skatt, moms och nätavgifter 
 
 ### Begränsningar
@@ -18,4 +18,4 @@
 ### Så här hämtas och bearbetas datan
 
 1. `python src/hamta_elpris.py` hämtar rådata till `data/raw/`
-2. `python src/build_prices.py` räknar tim- och dagspriser till `data/processed/`
+2. `python src/bygg_priser.py` räknar tim- och dagspriser till `data/processed/`
