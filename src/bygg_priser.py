@@ -59,6 +59,6 @@ os.makedirs("data/processed", exist_ok=True)
 
 # Spara tim och dagspriser
 hourly.to_csv("data/processed/hourly_prices.csv", index=False)
-daily.to_csv("data/processed/daily_prices.csv", index=False)
+daily.to_csv("data/processed/se3_daily.csv", index=False)
 
 print("Sparade", len(hourly), "timmar och", len(daily), "dagar")
