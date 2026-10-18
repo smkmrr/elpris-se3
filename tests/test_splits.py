@@ -3,7 +3,7 @@ from datetime import date, timedelta
 import pandas as pd
 import pytest
 
-from elpris.backtest import available_at_noon, make_targets, split_origins, valid_origins
+from elpris.splits import available_at_noon, make_targets, split_origins, valid_origins
 
 
 @pytest.fixture
