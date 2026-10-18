@@ -7,16 +7,16 @@ import pandas as pd
 HORIZONS = range(1, 8)
 
 
-def available_at_noon(daily: pd.DataFrame, origin_date: date) -> pd.DataFrame:
-    """Dagsvärden som var kända kl. 12 på origin_date."""
-    return daily[daily["date"] <= origin_date ].copy()
+def available_at_noon(daily: pd.DataFrame, forecast_date: date) -> pd.DataFrame:
+    """Dagsvärden som var kända kl. 12 på forecast_date."""
+    return daily[daily["date"] <= forecast_date ].copy()
 
 
 
-def make_targets(daily: pd.DataFrame, origin_date: date) -> pd.DataFrame:
+def make_targets(daily: pd.DataFrame, forecast_date: date) -> pd.DataFrame:
     """Sju måldagar (D+1 ... D+7) med verkliga dagsvärden. Endast för utvärdering."""
     rows = [
-        {"origin_date": origin_date, "target_date": origin_date + timedelta(days=h), "horizon": h}
+        {"forecast_date": forecast_date, "target_date": forecast_date + timedelta(days=h), "horizon": h}
         for h in HORIZONS
     ]
     targets = pd.DataFrame(rows)

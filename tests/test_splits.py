@@ -23,7 +23,7 @@ def test_make_targets_horizon_matches_dates(daily):
     origin = date(2026, 1, 10)
     targets = make_targets(daily, origin)
     assert list(targets["horizon"]) == [1, 2, 3, 4, 5, 6, 7]
-    assert all(targets["target_date"] - targets["origin_date"] == pd.to_timedelta(targets["horizon"], unit="D"))
+    assert all(targets["target_date"] - targets["forecast_date"] == pd.to_timedelta(targets["horizon"], unit="D"))
 
 
 
