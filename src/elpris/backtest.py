@@ -41,9 +41,8 @@ def to_long_predictions(forecasts, daily_prices, model_name):
     return predictions
 
 
-def run_baseline_backtest(daily_prices, start_date, end_date):
-    """Kör baselinen för varje prognosdag mellan start_date och end_date."""
-    forecast_dates = pd.date_range(start_date, end_date, freq="D")
+def run_baseline_backtest(daily_prices, forecast_dates):
+    """Kör baselinen för varje prognosdag i forecast_dates."""
 
     all_forecasts = []
     for forecast_date in forecast_dates:
