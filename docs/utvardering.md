@@ -42,7 +42,8 @@ from elpris.plots import plot_mae_by_horizon
 
 daily = pd.read_csv("data/processed/daily_prices.csv")
 
-result = run_baseline_backtest(daily, "STARTDATUM", "SLUTDATUM")
+forecast_dates = pd.date_range("STARTDATUM", "SLUTDATUM", freq="D")
+result = run_baseline_backtest(daily, forecast_dates)
 table = mae_table(result)
 fig = plot_mae_by_horizon(table, "baseline")
 ```
