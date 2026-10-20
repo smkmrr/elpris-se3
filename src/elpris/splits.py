@@ -6,10 +6,13 @@ import pandas as pd
 
 HORIZONS = range(1, 8)
 
+# Gruppens beslut (2026-10-19): låst innan någon modell tränas
+TEST_START = date(2025, 10, 1)
+HISTORY_DAYS = 14
 
 def available_at_noon(daily: pd.DataFrame, forecast_date: date) -> pd.DataFrame:
     """Dagsvärden som var kända kl. 12 på forecast_date."""
-    return daily[daily["date"] <= forecast_date ].copy()
+    return daily[daily["date"] <= forecast_date].copy()
 
 
 
@@ -23,7 +26,7 @@ def make_targets(daily: pd.DataFrame, forecast_date: date) -> pd.DataFrame:
     return targets.merge(daily, left_on="target_date", right_on="date", how="left").drop(columns="date")
 
 
-def valid_origins(daily: pd.DataFrame, history_days: int = 7) -> list[date]:
+def valid_origins(daily: pd.DataFrame, history_days: int = HISTORY_DAYS) -> list[date]:
     """Alla dagar som kan vara prognostillfälle."""
     first = daily["date"].min() + timedelta(days=history_days - 1)
     last = daily["date"].max() - timedelta(days=7)
