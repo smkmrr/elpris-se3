@@ -3,7 +3,7 @@ from datetime import date, timedelta
 import os
 import time
 
-import requests
+import httpx
 
 start = date(2021, 11, 1)
 end = date.today()
@@ -21,7 +21,7 @@ while day <= end:
         day = day + timedelta(days=1)
         continue
 
-    response = requests.get(url)
+    response = httpx.get(url)
 
     if response.status_code != 200:
         print("Misslyckades:", day, "kod", response.status_code)
