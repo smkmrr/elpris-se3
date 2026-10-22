@@ -3,7 +3,7 @@ from datetime import date, timedelta
 import pandas as pd
 import pytest
 
-from elpris.splits import available_at_noon, make_targets, split_origins, valid_origins
+from elpris.splits import available_at_noon, make_targets, split_origins, valid_origins, HISTORY_DAYS, TEST_START
 
 
 @pytest.fixture
@@ -29,7 +29,10 @@ def test_make_targets_horizon_matches_dates(daily):
 
 def test_split_has_gap_and_no_overlap(daily):
     test_start = date(2026, 1, 20)
-    train, test = split_origins(valid_origins(daily), test_start)
+    train, test = split_origins(valid_origins(daily, history_days =7), test_start)
+
+    # 0. Båda delarna måste innehålla dagar, annars testar vi ingenting 
+    assert train and test 
 
     # 1. Sista träningsoriginens måldagar slutar före testperioden (gap)
     assert train[-1] + timedelta(days=7) < test_start
@@ -46,3 +49,8 @@ def test_valid_origins_have_all_seven_targets(daily):
     for origin in valid_origins(daily):
         targets = make_targets(daily, origin)
         assert targets["mean"].notna().all()
+
+
+def test_group_decisions_are_locked():
+    assert TEST_START == date(2025, 10, 1)
+    assert HISTORY_DAYS == 14
