@@ -1,40 +1,52 @@
+"""Hämta SE3-elpriser från elprisetjustnu.se och spara rådata per dag."""
+
 import json
-from datetime import date, timedelta
-import os
 import time
+from datetime import date, timedelta
+from pathlib import Path
 
 import httpx
 
-start = date(2021, 11, 1)
-end = date.today()
+START_DATE = date(2021, 11, 1)
+RAW_DIR = Path("data/raw")
+API_URL = (
+    "https://www.elprisetjustnu.se/api/v1/prices/{day.year}/{day:%m-%d}_{area}.json"
+)
 
-# Skapar mapp för rådata
-os.makedirs("data/raw", exist_ok=True)
 
-# Skapar en loop som hämtar data dag för dag, sparar i jsonfiler och hanterar eventuella fel när datan laddas in
-day = start
-while day <= end:
-    url = f"https://www.elprisetjustnu.se/api/v1/prices/{day.year}/{day:%m-%d}_SE3.json"
-    filename = f"data/raw/{day}_SE3.json"
+def build_url(day, area="SE3"):
+    """URL till API:t för en dag och ett elområde."""
+    return API_URL.format(day=day, area=area)
 
-    if os.path.exists(filename):
-        day = day + timedelta(days=1)
-        continue
 
-    response = httpx.get(url)
+def fetch_range(start, end, raw_dir=RAW_DIR, area="SE3"):
+    """Hämta varje dag från start till end och spara som JSON i raw_dir.
 
-    if response.status_code != 200:
-        print("Misslyckades:", day, "kod", response.status_code)
-        day = day + timedelta(days=1)
-        continue
+    Dagar som redan finns sparade hoppas över.
+    """
+    raw_dir.mkdir(parents=True, exist_ok=True)
 
-    data = response.json()
+    day = start
+    while day <= end:
+        filename = raw_dir / f"{day}_{area}.json"
 
-    with open(filename, "w") as file:
-        json.dump(data, file)
+        if not filename.exists():
+            response = httpx.get(build_url(day, area), timeout=20)
 
-    print("Sparade", filename, "med", len(data), "priser")
+            if response.status_code == 200:
+                data = response.json()
+                filename.write_text(json.dumps(data))
+                print("Sparade", filename, "med", len(data), "priser")
+                time.sleep(0.5)
+            else:
+                print("Misslyckades:", day, "kod", response.status_code)
 
-    time.sleep(0.5)
+        day += timedelta(days=1)
 
-    day = day + timedelta(days=1)
+
+def main():
+    fetch_range(START_DATE, date.today())
+
+
+if __name__ == "__main__":
+    main()
