@@ -40,7 +40,7 @@ from elpris.backtest import run_baseline_backtest
 from elpris.metrics import mae_table
 from elpris.plots import plot_mae_by_horizon
 
-daily = pd.read_csv("data/processed/daily_prices.csv")
+daily = pd.read_csv("data/processed/se3_daily.csv")
 
 forecast_dates = pd.date_range("STARTDATUM", "SLUTDATUM", freq="D")
 result = run_baseline_backtest(daily, forecast_dates)

@@ -17,5 +17,5 @@
 
 ### Så här hämtas och bearbetas datan
 
-1. `python src/hamta_elpris.py` hämtar rådata till `data/raw/`
-2. `python src/bygg_priser.py` räknar tim- och dagspriser till `data/processed/`
+1. `python -m elpris.hamta_elpris` hämtar rådata till `data/raw/`
+2. `python -m elpris.bygg_priser` räknar tim- och dagspriser till `data/processed/`
