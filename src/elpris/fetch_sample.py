@@ -9,11 +9,7 @@ from pathlib import Path
 import httpx
 import pandas as pd
 
-
-API_URL = (
-    "https://www.elprisetjustnu.se/api/v1/prices/"
-    "{year}/{month_day}_{area}.json"
-)
+API_URL = "https://www.elprisetjustnu.se/api/v1/prices/{year}/{month_day}_{area}.json"
 
 
 def fetch_daily_prices(
@@ -27,9 +23,7 @@ def fetch_daily_prices(
     end = pd.Timestamp(end_date).date()
 
     if end < start:
-        raise ValueError(
-            "end_date måste vara samma dag som eller efter start_date"
-        )
+        raise ValueError("end_date måste vara samma dag som eller efter start_date")
 
     rows = []
 
@@ -52,17 +46,12 @@ def fetch_daily_prices(
             observations = response.json()
 
             prices = pd.Series(
-                [
-                    item["SEK_per_kWh"]
-                    for item in observations
-                ],
+                [item["SEK_per_kWh"] for item in observations],
                 dtype="float64",
             )
 
             if prices.empty:
-                raise ValueError(
-                    f"Inga priser returnerades för {current}"
-                )
+                raise ValueError(f"Inga priser returnerades för {current}")
 
             rows.append(
                 {
@@ -126,9 +115,7 @@ def main() -> None:
         index=False,
     )
 
-    print(
-        f"Sparade {len(daily)} dagar i {args.output}"
-    )
+    print(f"Sparade {len(daily)} dagar i {args.output}")
 
 
 if __name__ == "__main__":

@@ -26,7 +26,7 @@ def main():
     forecast_date = daily["date"].max()
 
     model = "baseline"
-    forecast = forecast_next_week(daily, forecast_date,  model=model)
+    forecast = forecast_next_week(daily, forecast_date, model=model)
 
     print(f"Prognos för SE3 med {model}, gjord {forecast_date} kl. 12 (SEK/kWh):")
     print(forecast.round({"mean": 2, "max": 2, "min": 2}).to_string(index=False))

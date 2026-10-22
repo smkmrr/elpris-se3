@@ -12,7 +12,6 @@ dependencies = [
     "scikit-learn",
     "httpx",
     "matplotlib",
-    "requests",
 ]
 
 [project.optional-dependencies]

@@ -13,8 +13,14 @@ def plot_mae_by_horizon(table, model):
 
     for target in ["max", "mean", "min"]:
         errors = table.loc[(model, target)]
-        ax.plot(errors.index, errors.values, marker="o", linewidth=2,
-                color=COLORS[target], label=LABELS[target])
+        ax.plot(
+            errors.index,
+            errors.values,
+            marker="o",
+            linewidth=2,
+            color=COLORS[target],
+            label=LABELS[target],
+        )
 
     ax.set_title(f"{model}: genomsnittligt fel per prognosdag")
     ax.set_xlabel("Dagar framåt")
