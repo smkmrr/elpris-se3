@@ -16,13 +16,39 @@ Households with high electricity use, e.g. EV owners planning when to charge.
 _TBD: source, owner, terms of use, fetch date, limitations._
 
 ## Project structure
-_TBD_
+
+```
+data/raw/          raw API files, one JSON per day (not in git)
+data/processed/    hourly_prices.csv and se3_daily.csv (not in git)
+docs/              data source and evaluation notes
+notebooks/         exploration (EDA, test setup, Random Forest)
+results/           final MAE table and figures (created by evaluate)
+src/elpris/        all project code
+tests/             pytest tests
+```
 
 ## Installation
-_TBD_
+Requires Python 3.10 or later.
+
+```bash
+git clone https://github.com/smkmrr/elpris-se3.git
+cd elpris-se3
+python -m venv .venv
+source .venv/Scripts/activate   # Windows (Git Bash)
+# source .venv/bin/activate     # macOS / Linux
+pip install -e ".[dev]"
+pytest
+```
 
 ## How to run
-_TBD_
+Run each step from the project root:
+
+| Step | Command | Output |
+|---|---|---|
+| 1. Fetch prices | `python -m elpris.hamta_elpris` | `data/raw/` (takes 15–20 min the first time, then only new days) |
+| 2. Build hourly and daily prices | `python -m elpris.bygg_priser` | `data/processed/se3_daily.csv` |
+| 3. Compare baseline and Random Forest | `python -m elpris.evaluate` | `results/` |
+| 4. Forecast the next seven days | `python -m elpris.forecast` | table printed in the terminal |
 
 ## Methods
 _TBD: baseline and Random Forest._
