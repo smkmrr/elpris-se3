@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import pandas as pd
 
-
 REQUIRED_COLUMNS = {"date", "mean", "max", "min"}
 
 
@@ -22,16 +21,12 @@ def create_weekday_baseline(
     missing_columns = REQUIRED_COLUMNS.difference(daily_prices.columns)
 
     if missing_columns:
-        raise ValueError(
-            f"Dagstabellen saknar kolumner: {sorted(missing_columns)}"
-        )
+        raise ValueError(f"Dagstabellen saknar kolumner: {sorted(missing_columns)}")
 
     if horizon < 1:
         raise ValueError("horizon måste vara minst 1")
 
-    prices = daily_prices[
-        ["date", "mean", "max", "min"]
-    ].copy()
+    prices = daily_prices[["date", "mean", "max", "min"]].copy()
 
     prices["date"] = pd.to_datetime(
         prices["date"],
@@ -50,9 +45,7 @@ def create_weekday_baseline(
     day_d = pd.Timestamp(forecast_date).normalize()
 
     # Endast information som är känd senast dag D får användas.
-    available = prices[
-        prices["date"] <= day_d
-    ].set_index("date")
+    available = prices[prices["date"] <= day_d].set_index("date")
 
     forecasts = []
 

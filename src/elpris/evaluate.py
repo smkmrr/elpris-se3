@@ -27,17 +27,11 @@ def load_daily(path=DATA_PATH):
 
 
 def prediction_keys(predictions):
-    keys = predictions[
-        ["forecast_date", "target_date", "horizon"]
-    ].copy()
+    keys = predictions[["forecast_date", "target_date", "horizon"]].copy()
 
-    keys["forecast_date"] = pd.to_datetime(
-        keys["forecast_date"]
-    ).dt.date
+    keys["forecast_date"] = pd.to_datetime(keys["forecast_date"]).dt.date
 
-    keys["target_date"] = pd.to_datetime(
-        keys["target_date"]
-    ).dt.date
+    keys["target_date"] = pd.to_datetime(keys["target_date"]).dt.date
 
     return set(keys.itertuples(index=False, name=None))
 
@@ -54,9 +48,7 @@ def evaluate(daily):
     )
 
     if not test_origins:
-        raise ValueError(
-            "Testperioden innehåller inga giltiga prognosdagar"
-        )
+        raise ValueError("Testperioden innehåller inga giltiga prognosdagar")
 
     baseline_predictions = run_baseline_backtest(
         daily,
@@ -68,12 +60,8 @@ def evaluate(daily):
         TEST_START,
     )
 
-    if prediction_keys(
-        baseline_predictions
-    ) != prediction_keys(rf_predictions):
-        raise ValueError(
-            "Baseline och Random Forest använder olika prognosdagar"
-        )
+    if prediction_keys(baseline_predictions) != prediction_keys(rf_predictions):
+        raise ValueError("Baseline och Random Forest använder olika prognosdagar")
 
     predictions = pd.concat(
         [

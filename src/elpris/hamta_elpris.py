@@ -9,7 +9,9 @@ import httpx
 
 START_DATE = date(2021, 11, 1)
 RAW_DIR = Path("data/raw")
-API_URL = "https://www.elprisetjustnu.se/api/v1/prices/{day.year}/{day:%m-%d}_{area}.json"
+API_URL = (
+    "https://www.elprisetjustnu.se/api/v1/prices/{day.year}/{day:%m-%d}_{area}.json"
+)
 
 
 def build_url(day, area="SE3"):

@@ -1,6 +1,3 @@
-import pandas as pd
-
-
 def mae(y_true, y_pred):
     """Genomsnittligt absolut fel mellan verkliga och förutspådda värden."""
     errors = (y_true - y_pred).abs()
@@ -16,8 +13,7 @@ def mae_table(predictions):
     predictions = predictions.assign(abs_error=errors)
 
     table = (
-        predictions
-        .groupby(["model", "target", "horizon"])["abs_error"]
+        predictions.groupby(["model", "target", "horizon"])["abs_error"]
         .mean()
         .unstack("horizon")
     )

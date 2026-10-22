@@ -28,10 +28,7 @@ def to_hourly(prices):
     hour = time_start.dt.floor("h").dt.tz_convert("Europe/Stockholm")
 
     hourly = (
-        prices.assign(hour=hour)
-        .groupby("hour")["SEK_per_kWh"]
-        .mean()
-        .reset_index()
+        prices.assign(hour=hour).groupby("hour")["SEK_per_kWh"].mean().reset_index()
     )
     hourly["date"] = hourly["hour"].dt.date
     return hourly
@@ -40,9 +37,7 @@ def to_hourly(prices):
 def to_daily(hourly):
     """Medel, högsta och lägsta timpris per dag."""
     return (
-        hourly.groupby("date")["SEK_per_kWh"]
-        .agg(["mean", "max", "min"])
-        .reset_index()
+        hourly.groupby("date")["SEK_per_kWh"].agg(["mean", "max", "min"]).reset_index()
     )
 
 
