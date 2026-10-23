@@ -1,11 +1,18 @@
+import argparse
+
 import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 
 from elpris.baseline import create_weekday_baseline
-from elpris.features import TARGET_COLUMNS, build_feature_table, get_model_feature_columns
+from elpris.features import (
+    TARGET_COLUMNS,
+    build_feature_table,
+    get_model_feature_columns,
+)
 from elpris.splits import available_at_noon
 
 OUTPUT_COLUMNS = ["target_date", "horizon", "mean", "max", "min"]
+
 
 def _forecast_random_forest(daily_prices, forecast_date):
     """Träna Random Forest på all historik och gissa D+1 till D+7."""
@@ -13,7 +20,11 @@ def _forecast_random_forest(daily_prices, forecast_date):
 
     # Sju tomma framtida dagar, så att build_feature_table gör rader för dag D
     future = pd.DataFrame(
-        {"date": pd.date_range(forecast_date + pd.Timedelta(days=1), periods=7, freq="D")}
+        {
+            "date": pd.date_range(
+                forecast_date + pd.Timedelta(days=1), periods=7, freq="D"
+            )
+        }
     )
 
     daily = daily_prices.assign(date=pd.to_datetime(daily_prices["date"]))
@@ -40,6 +51,7 @@ def _forecast_random_forest(daily_prices, forecast_date):
         }
     )
 
+
 def forecast_next_week(daily_prices, forecast_date, model="baseline"):
     """Prognos för dag D+1 till D+7, gjord klockan 12 dag D.
 
@@ -57,15 +69,25 @@ def forecast_next_week(daily_prices, forecast_date, model="baseline"):
 
 
 def main():
-    """Visa prognosen för de sju dagarna efter den senaste dagen i datan."""
+    """Visa prognosen för de sju dagarna efter den senaste dagen i datan.
+
+    python -m elpris.forecast                       kör randomforest (standard)
+    python -m elpris.forecast --model baseline      kör baseline"""
+    parser = argparse.ArgumentParser(description="Prognos för de kommande sju dagarna.")
+    parser.add_argument(
+        "--model",
+        choices=["baseline", "random_forest"],
+        default="random_forest",
+        help="Vilken modell som används (standard: random_forest)",
+    )
+    args = parser.parse_args()
 
     daily = pd.read_csv("data/processed/se3_daily.csv")
     forecast_date = daily["date"].max()
 
-    model = "baseline"
-    forecast = forecast_next_week(daily, forecast_date, model=model)
+    forecast = forecast_next_week(daily, forecast_date, model=args.model)
 
-    print(f"Prognos för SE3 med {model}, gjord {forecast_date} kl. 12 (SEK/kWh):")
+    print(f"Prognos för SE3 med {args.model}, gjord {forecast_date} kl. 12 (SEK/kWh):")
     print(forecast.round({"mean": 2, "max": 2, "min": 2}).to_string(index=False))
 
 
