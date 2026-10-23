@@ -1,9 +1,44 @@
 import pandas as pd
+from sklearn.ensemble import RandomForestRegressor
 
 from elpris.baseline import create_weekday_baseline
+from elpris.features import TARGET_COLUMNS, build_feature_table, get_model_feature_columns
+from elpris.splits import available_at_noon
 
 OUTPUT_COLUMNS = ["target_date", "horizon", "mean", "max", "min"]
 
+def _forecast_random_forest(daily_prices, forecast_date):
+    """Träna Random Forest på all historik och gissa D+1 till D+7."""
+    forecast_date = pd.Timestamp(forecast_date)
+
+    # Sju tomma framtida dagar, så att build_feature_table gör rader för dag D
+    future = pd.DataFrame(
+        {"date": pd.date_range(forecast_date + pd.Timedelta(days=1), periods=7, freq="D")}
+    )
+
+    daily = daily_prices.assign(date=pd.to_datetime(daily_prices["date"]))
+    extended = pd.concat([daily, future], ignore_index=True)
+
+    features = build_feature_table(extended, available_data_fn=available_at_noon)
+
+    # Träna på rader där facit finns, gissa på raderna för dag D
+    train = features[features[TARGET_COLUMNS].notna().all(axis=1)]
+    today = features[features["origin_date"] == forecast_date]
+
+    feature_cols = get_model_feature_columns(features)
+    model = RandomForestRegressor(n_estimators=200, random_state=42, n_jobs=-1)
+    model.fit(train[feature_cols], train[TARGET_COLUMNS])
+    pred = model.predict(today[feature_cols])
+
+    return pd.DataFrame(
+        {
+            "target_date": today["target_date"].values,
+            "horizon": today["horizon"].values,
+            "mean": pred[:, 0],
+            "max": pred[:, 1],
+            "min": pred[:, 2],
+        }
+    )
 
 def forecast_next_week(daily_prices, forecast_date, model="baseline"):
     """Prognos för dag D+1 till D+7, gjord klockan 12 dag D.
@@ -13,6 +48,8 @@ def forecast_next_week(daily_prices, forecast_date, model="baseline"):
     """
     if model == "baseline":
         forecasts = create_weekday_baseline(daily_prices, forecast_date)
+    elif model == "random_forest":
+        forecasts = _forecast_random_forest(daily_prices, forecast_date)
     else:
         raise ValueError(f"Okänd modell: {model}")
 
