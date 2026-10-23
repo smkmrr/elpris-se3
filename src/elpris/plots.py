@@ -57,7 +57,7 @@ def plot_model_comparison(
             ax.plot(
                 errors.index,
                 errors.values,
-                marker= markers.get(model, "o"),
+                marker=markers.get(model, "o"),
                 linewidth=2,
                 color=COLORS[target],
                 linestyle=linestyles.get(model, "-"),
