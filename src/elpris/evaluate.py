@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 from elpris.backtest import run_baseline_backtest
-from elpris.metrics import mae_table
+from elpris.metrics import bias_by_season, mae_by_season, mae_spike_vs_normal, mae_table
 from elpris.plots import plot_model_comparison
 from elpris.random_forest import run_random_forest_backtest
 from elpris.splits import (
@@ -91,6 +91,16 @@ def main():
     table.reset_index().to_csv(
         RESULTS_DIR / "mae_table.csv",
         index=False,
+    )
+
+    mae_by_season(predictions).reset_index().to_csv(
+        RESULTS_DIR / "mae_by_season.csv", index=False
+    )
+    bias_by_season(predictions).reset_index().to_csv(
+        RESULTS_DIR / "bias_by_season.csv", index=False
+    )
+    mae_spike_vs_normal(predictions).reset_index().to_csv(
+        RESULTS_DIR / "mae_spike_vs_normal.csv", index=False
     )
 
     figure = plot_model_comparison(table)
