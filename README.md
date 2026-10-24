@@ -39,9 +39,8 @@ src/elpris/        all kod i projektet
 tests/             tester med pytest
 ```
 
-
 ## Installation
-Requires Python 3.10 or later.
+Kräver Python 3.10 eller senare.
 
 ```bash
 git clone https://github.com/smkmrr/elpris-se3.git
@@ -53,15 +52,15 @@ pip install -e ".[dev]"
 pytest
 ```
 
-## How to run
-Run each step from the project root:
+## Så här kör du
+Kör varje steg från projektets rotmapp, i den här ordningen:
 
-| Step | Command | Output |
+| Steg | Kommando | Resultat |
 |---|---|---|
-| 1. Fetch prices | `python -m elpris.hamta_elpris` | `data/raw/` (takes 15–20 min the first time, then only new days) |
-| 2. Build hourly and daily prices | `python -m elpris.bygg_priser` | `data/processed/se3_daily.csv` |
-| 3. Compare baseline and Random Forest | `python -m elpris.evaluate` | `results/` |
-| 4. Forecast the next seven days | `python -m elpris.forecast` | table printed in the terminal |
+| 1. Hämta priser | `python -m elpris.hamta_elpris` | `data/raw/` (tar 15–20 min första gången, sedan hämtas bara nya dagar) |
+| 2. Räkna tim- och dagspriser | `python -m elpris.bygg_priser` | `data/processed/se3_daily.csv` |
+| 3. Jämför baseline och Random Forest | `python -m elpris.evaluate` | `results/` |
+| 4. Prognos för kommande sju dagar | `python -m elpris.forecast` | tabell i terminalen |
 
 ## Methods
 _TBD: baseline and Random Forest._
