@@ -53,6 +53,7 @@ Tabellerna finns i `results/mae_by_season.csv`, `results/bias_by_season.csv` och
 - **Standardinställningar.** Random Forest körs med 200 träd och sklearns standardinställningar, utan hyperparameteroptimering. En modell förutsäger alla tre målvärden och alla sju prognosdagar samtidigt.
 - **Baseline använder inte dagens priser.** Baselinen tittar bara på samma veckodag förra veckan. Det gör den enkel och stabil, men långsam när prisnivån ändras.
 - **Ett enda mätvärde.** Vi mäter bara MAE. Prognoserna har inga osäkerhetsintervall, så användaren vet inte hur säker en enskild prognos är.
+- **Demon och utvärderingen använder olika träning.** I utvärderingen tränas Random Forest en gång på data fram till september 2025. I demon (`forecast.py`) tränas den om på all data fram till prognosdagen. Utvärderingens siffror gäller alltså en modell som inte tränas om. Demomodellen har mer och nyare data och kan därför vara något bättre, men det har vi inte mätt.
 
 ## När prognosen inte ska användas
 
@@ -68,7 +69,7 @@ Tabellerna finns i `results/mae_by_season.csv`, `results/bias_by_season.csv` och
 
 Varje förslag bygger på ett fynd från felanalysen.
 
-- **Träna om modellen regelbundet (expanderande fönster).** RF följde inte prisnivån i januari 2026 eftersom den bara tränades en gång. Om modellen tränas om varje vecka med all data fram till prognosdagen kan den anpassa sig snabbare.
+- **Träna om modellen regelbundet (expanderande fönster).** RF följde inte prisnivån i januari 2026 eftersom den bara tränades en gång. Om modellen tränas om varje vecka med all data fram till prognosdagen kan den anpassa sig snabbare. Demon i `forecast.py` gör redan detta, men nästa steg är att även utvärdera modellen på samma sätt, så att siffrorna gäller den modell som faktiskt används.
 - **Lägg till väderprognoser.** Felen var störst på vintern och hösten, då väder påverkar priset mest. Temperatur- och vindprognoser kan hjälpa modellen att förutse höga priser. Det kräver en källa med historiska prognoser från prognostidpunkten, till exempel Open-Meteos historiska prognoser, så att ingen framtida information läcker in.
 - **Korrigera systematiska fel.** RF:s fel på vintern var mest systematiska (bias −0,265 av MAE 0,344). En enkel korrigering baserad på de senaste veckornas fel kan minska dem.
 - **Mät det användaren bryr sig om.** Mät hur ofta prognosen pekar ut rätt billigaste dag i veckan, inte bara felet i kr/kWh.
