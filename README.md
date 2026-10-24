@@ -12,8 +12,18 @@ Households with high electricity use, e.g. EV owners planning when to charge.
 - Isac Reger
 - Ali Akyel
 
-## Data source
-_TBD: source, owner, terms of use, fetch date, limitations._
+## Datakälla
+Spotpriser för elområde SE3 hämtas från API:et
+[Elpriset just nu](https://www.elprisetjustnu.se/elpris-api), som drivs av
+Beneficial Apps AS. Datan kommer ursprungligen från ENTSO-E och är fri att
+använda om källan anges. Den finns från 1 november 2021 och fram till idag.
+Priserna är i SEK per kWh, utan skatt, moms och nätavgifter.
+
+Datan sparas inte i repot. Den hämtas med skriptet i steg 1 under
+"Så här kör du", och hämtningsdatumet är den dag skriptet körs.
+
+Begränsningar och detaljer om bearbetningen finns i
+[docs/datakalla.md](docs/datakalla.md).
 
 ## Project structure
 
