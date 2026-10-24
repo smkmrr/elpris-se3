@@ -92,7 +92,11 @@ i data och metod och när prognosen inte ska användas finns samlat i
 ## Use of generative AI
 _TBD_
 
-## License
-_TBD_
+## Licens
+Koden är licensierad under MIT-licensen, se [LICENSE](LICENSE). Det betyder
+att andra får använda och ändra koden om de anger oss som upphovspersoner.
+
+Licensen gäller bara koden. Prisdatan kommer från Elpriset just nu, ligger
+inte i repot och omfattas av deras villkor (se Datakälla).
 
 
