@@ -45,6 +45,10 @@ def plot_model_comparison(
         "baseline": "--",
         "random_forest": "-",
     }
+    markers = {
+        "baseline": "o",
+        "random_forest": "s",
+    }
 
     for model in models:
         for target in ["mean", "max", "min"]:
@@ -53,7 +57,7 @@ def plot_model_comparison(
             ax.plot(
                 errors.index,
                 errors.values,
-                marker="o",
+                marker=markers.get(model, "o"),
                 linewidth=2,
                 color=COLORS[target],
                 linestyle=linestyles.get(model, "-"),
@@ -67,6 +71,6 @@ def plot_model_comparison(
     ax.set_ylim(bottom=0)
     ax.grid(axis="y", color="#e5e5e5")
     ax.spines[["top", "right"]].set_visible(False)
-    ax.legend(frameon=False)
+    ax.legend(frameon=False, handlelength=4)
 
     return fig
