@@ -62,8 +62,24 @@ Kör varje steg från projektets rotmapp, i den här ordningen:
 | 3. Jämför baseline och Random Forest | `python -m elpris.evaluate` | `results/` |
 | 4. Prognos för kommande sju dagar | `python -m elpris.forecast` | tabell i terminalen |
 
-## Methods
-_TBD: baseline and Random Forest._
+## Metod
+Varje dag D kl. 12 görs en prognos för dag D+1 till D+7. Då räknas bara
+priser till och med dag D som kända, eftersom morgondagens priser
+publiceras först omkring kl. 13. Prognosen gäller tre värden per dag:
+medelpris, högsta pris och lägsta pris.
+
+**Baseline:** priset för en måldag gissas vara detsamma som samma veckodag
+en vecka tidigare. Den är enkel och fungerar som jämförelse.
+
+**Random Forest:** en modell som lär sig av historiken. Den använder
+priserna de senaste sju dagarna, medel, högsta och lägsta pris över de
+senaste 7 och 14 dagarna, samt veckodag och månad för måldagen och hur
+många dagar fram prognosen gäller.
+
+**Utvärdering:** modellen tränas på data före 1 oktober 2025 och testas
+på perioden därefter. Mellan träning och test finns en veckas mellanrum
+så att ingen framtida information läcker in. Modellerna jämförs med MAE
+(genomsnittligt absolut fel i SEK/kWh), separat för varje prognosdag 1–7.
 
 ## Results
 _TBD_
