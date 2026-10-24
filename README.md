@@ -84,8 +84,10 @@ så att ingen framtida information läcker in. Modellerna jämförs med MAE
 ## Results
 _TBD_
 
-## Limitations
-_TBD_
+## Begränsningar
+Vad resultaten visar och inte visar, var modellerna missar, begränsningar
+i data och metod och när prognosen inte ska användas finns samlat i
+[docs/begransningar.md](docs/begransningar.md).
 
 ## Use of generative AI
 _TBD_
