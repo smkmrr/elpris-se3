@@ -1,12 +1,14 @@
-# Elpris SE3 — 7-day spot price forecast
+# Elpris SE3 – prognos för spotpriset sju dagar framåt
 
-## Problem and purpose
-Forecast the daily mean, max and min spot price in SE3 for each of the next seven days.
+## Problem och syfte
+Prognos för dagens medel, högsta och lägsta spotpris i SE3 för var och en
+av de kommande sju dagarna. Prognosen görs varje dag kl. 12.
 
-## Target users
-Households with high electricity use, e.g. EV owners planning when to charge.
+## Målgrupp
+Hushåll med hög elförbrukning, till exempel elbilsägare som vill planera
+när de ska ladda.
 
-## Group members
+## Gruppmedlemmar
 - Bilal Mah
 - Hamed Rezaei
 - Isac Reger
@@ -25,17 +27,18 @@ Datan sparas inte i repot. Den hämtas med skriptet i steg 1 under
 Begränsningar och detaljer om bearbetningen finns i
 [docs/datakalla.md](docs/datakalla.md).
 
-## Project structure
+## Projektstruktur
 
 ```
-data/raw/          raw API files, one JSON per day (not in git)
-data/processed/    hourly_prices.csv and se3_daily.csv (not in git)
-docs/              data source and evaluation notes
-notebooks/         exploration (EDA, test setup, Random Forest)
-results/           final MAE table and figures (created by evaluate)
-src/elpris/        all project code
-tests/             pytest tests
+data/raw/          rådata från API:et, en JSON-fil per dag (inte i git)
+data/processed/    hourly_prices.csv och se3_daily.csv (inte i git)
+docs/              datakälla och utvärdering
+notebooks/         utforskning (EDA, testupplägg, Random Forest, felanalys)
+results/           MAE-tabeller och grafer (skapas av evaluate)
+src/elpris/        all kod i projektet
+tests/             tester med pytest
 ```
+
 
 ## Installation
 Requires Python 3.10 or later.
