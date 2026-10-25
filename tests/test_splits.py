@@ -7,6 +7,7 @@ from elpris.splits import (
     HISTORY_DAYS,
     TEST_START,
     available_at_noon,
+    limit_to_test_end,
     make_targets,
     split_origins,
     valid_origins,
@@ -62,3 +63,9 @@ def test_valid_origins_have_all_seven_targets(daily):
 def test_group_decisions_are_locked():
     assert TEST_START == date(2025, 10, 1)
     assert HISTORY_DAYS == 14
+
+
+def test_limit_to_test_end_makes_test_end_last_origin(daily):
+    test_end = date(2026, 1, 20)
+    limited = limit_to_test_end(daily, test_end)
+    assert valid_origins(limited, history_days=7)[-1] == test_end

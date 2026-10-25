@@ -12,6 +12,7 @@ from elpris.random_forest import run_random_forest_backtest
 from elpris.splits import (
     HISTORY_DAYS,
     TEST_START,
+    limit_to_test_end,
     split_origins,
     valid_origins,
 )
@@ -75,7 +76,7 @@ def evaluate(daily):
 
 
 def main():
-    daily = load_daily()
+    daily = limit_to_test_end(load_daily)
     predictions, table = evaluate(daily)
 
     RESULTS_DIR.mkdir(
