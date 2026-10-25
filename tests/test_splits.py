@@ -3,7 +3,14 @@ from datetime import date, timedelta
 import pandas as pd
 import pytest
 
-from elpris.splits import available_at_noon, make_targets, split_origins, valid_origins, HISTORY_DAYS, TEST_START
+from elpris.splits import (
+    HISTORY_DAYS,
+    TEST_START,
+    available_at_noon,
+    make_targets,
+    split_origins,
+    valid_origins,
+)
 
 
 @pytest.fixture
@@ -23,16 +30,18 @@ def test_make_targets_horizon_matches_dates(daily):
     origin = date(2026, 1, 10)
     targets = make_targets(daily, origin)
     assert list(targets["horizon"]) == [1, 2, 3, 4, 5, 6, 7]
-    assert all(targets["target_date"] - targets["forecast_date"] == pd.to_timedelta(targets["horizon"], unit="D"))
-
+    assert all(
+        targets["target_date"] - targets["forecast_date"]
+        == pd.to_timedelta(targets["horizon"], unit="D")
+    )
 
 
 def test_split_has_gap_and_no_overlap(daily):
     test_start = date(2026, 1, 20)
-    train, test = split_origins(valid_origins(daily, history_days =7), test_start)
+    train, test = split_origins(valid_origins(daily, history_days=7), test_start)
 
-    # 0. Båda delarna måste innehålla dagar, annars testar vi ingenting 
-    assert train and test 
+    # 0. Båda delarna måste innehålla dagar, annars testar vi ingenting
+    assert train and test
 
     # 1. Sista träningsoriginens måldagar slutar före testperioden (gap)
     assert train[-1] + timedelta(days=7) < test_start
@@ -42,7 +51,6 @@ def test_split_has_gap_and_no_overlap(daily):
 
     # 3. Ingen dag finns i både train och test
     assert len(set(train) & set(test)) == 0
-
 
 
 def test_valid_origins_have_all_seven_targets(daily):
