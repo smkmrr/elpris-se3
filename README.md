@@ -89,8 +89,17 @@ Vad resultaten visar och inte visar, var modellerna missar, begränsningar
 i data och metod och när prognosen inte ska användas finns samlat i
 [docs/begransningar.md](docs/begransningar.md).
 
-## Use of generative AI
-_TBD_
+## Användning av generativ AI
+Vi har använt Claude och ChatGPT/Codex som stöd i arbetet, främst för att:
+
+- förstå kod, felmeddelanden och begrepp som dataläckage, tidsuppdelning och backtest
+- få förslag på kod, tester och dokumentation
+- förbättra språket i texter och granska pull requests
+
+All kod har vi själva skrivit in, kört och förstått. Resultaten har vi
+kontrollerat genom att köra testerna med pytest, köra projektet från en ren
+klon, granska varandras pull requests och jämföra siffror mellan oberoende
+implementationer.
 
 ## Licens
 Koden är licensierad under MIT-licensen, se [LICENSE](LICENSE). Det betyder
