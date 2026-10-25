@@ -62,6 +62,13 @@ Kör varje steg från projektets rotmapp, i den här ordningen:
 | 3. Jämför baseline och Random Forest | `python -m elpris.evaluate` | `results/` |
 | 4. Prognos för kommande sju dagar | `python -m elpris.forecast` | tabell i terminalen |
 
+Prognosen använder Random Forest som standard, eftersom den hade lägst MAE i
+utvärderingen. Vill du använda baseline i stället:
+
+```bash
+python -m elpris.forecast --model baseline
+```
+
 ## Metod
 Varje dag D kl. 12 görs en prognos för dag D+1 till D+7. Då räknas bara
 priser till och med dag D som kända, eftersom morgondagens priser
