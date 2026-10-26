@@ -1,26 +1,26 @@
 # Resultat, begränsningar och risker
 
-Det här dokumentet bygger på felanalysen i `notebooks/03_a2_hamed.ipynb` och tabellerna i `results/`. Prognosdagarna i testperioden är 2025-10-01 till 2026-10-05.
+Det här dokumentet bygger på felanalysen i `notebooks/03_a2_hamed.ipynb` och tabellerna i `results/` från slutkörningen. Prognosdagarna i testperioden är 2025-10-01 till 2026-10-15.
 
 ## Vad resultaten visar
 
-- **Helhet.** Random Forest hade lägre MAE än baseline för alla tre målvärden (dagsmedel, högsta och lägsta pris) och alla sju prognosdagar, räknat över hela testperioden. För dagsmedel dag 1 var felet 0,270 kr/kWh för RF och 0,362 kr/kWh för baseline.
+- **Helhet.** Random Forest hade lägre MAE än baseline för alla tre målvärden (dagsmedel, högsta och lägsta pris) och alla sju prognosdagar, räknat över hela testperioden. För dagsmedel dag 1 var felet 0,273 kr/kWh för RF och 0,367 kr/kWh för baseline.
 
-- **Störst skillnad dag 1.** Där hade RF ungefär 25 % lägre fel för dagsmedel och högsta pris. En trolig förklaring är att RF använder dagens priser, vilket baseline inte gör.
+- **Störst skillnad dag 1.** Där hade RF ungefär 25 % lägre fel för dagsmedel och 24 % för högsta pris. En trolig förklaring är att RF använder dagens priser, vilket baseline inte gör.
 
 - **Mindre skillnad längre fram.** Ju längre fram prognosen gäller, desto mindre blev skillnaden. För lägsta pris dag 7 var RF bara ungefär 6 % bättre (0,254 mot 0,270).
 
-- **Baselinen är platt.** Baselinens fel var nästan lika stort alla dagar (ungefär 0,36 kr/kWh för dagsmedel). Det beror på att baselinens prognos för en viss dag alltid är samma veckodag veckan innan, oavsett när prognosen görs.
+- **Baselinen är platt.** Baselinens fel var nästan lika stort alla dagar (0,36–0,37 kr/kWh för dagsmedel). Det beror på att baselinens prognos för en viss dag alltid är samma veckodag veckan innan, oavsett när prognosen görs.
 
 ## Vad resultaten inte visar
 
-- **Att RF är bättre under alla förhållanden.** Medelvärdet över hela testperioden döljer skillnader mellan årstider. På vintern hade RF större fel än baseline för lägsta pris (se nedan).
+- **Att RF är bättre under alla förhållanden.** Medelvärdet över hela testperioden döljer skillnader mellan årstider och typer av dagar. På vintern hade RF större fel än baseline för lägsta pris (se nedan).
 
 - **Hur dyra felen är för ett hushåll.** MAE räknar alla fel lika, men ett fel på en dag med mycket höga priser kostar mer än ett lika stort fel på en billig dag. Utvärderingen mäter alltså inte den ekonomiska konsekvensen av felen.
 
 - **Om hushållet väljer rätt dag.** Användaren vill främst veta vilken dag som är billigast. Vi har inte mätt hur ofta prognosen pekar ut rätt billigaste dag, bara hur stort felet är i kr/kWh.
 
-- **Hur säkra skillnaderna är.** Testperioden är ett år, och vi har inte beräknat osäkerhet eller spridning. Små skillnader, till exempel ca 6 % för lägsta pris dag 7, kan bero på slumpen. Hösten finns dessutom med två gånger i testperioden (2025 och 2026), vilket ger den större vikt.
+- **Hur säkra skillnaderna är.** Testperioden är ett år, och vi har inte beräknat osäkerhet eller spridning. Små skillnader, till exempel ca 6 % för lägsta pris dag 7 eller 0,004 kr/kWh för högsta pris på spikdagar, kan bero på slumpen. Hösten finns dessutom med två gånger i testperioden (2025 och 2026), vilket ger den större vikt.
 
 - **Hur modellerna fungerar i framtiden.** Resultaten gäller testperioden oktober 2025 – oktober 2026. Om prisnivån eller elmarknaden ändras kan felen bli både större och mindre.
 
@@ -28,13 +28,13 @@ Det här dokumentet bygger på felanalysen i `notebooks/03_a2_hamed.ipynb` och t
 
 Tabellerna finns i `results/mae_by_season.csv`, `results/bias_by_season.csv` och `results/mae_spike_vs_normal.csv`.
 
-- **Spikdagar.** En spikdag är en dag där det verkliga högsta priset hör till de 10 % högsta i testperioden (38 dagar). På spikdagar är felet för högsta pris ungefär dubbelt så stort som på vanliga dagar för båda modellerna (ca 1,04 kr/kWh mot 0,40–0,52). Random Forest är bättre än baseline på vanliga dagar, men inte på spikdagar. För dagsmedel och lägsta pris är RF till och med sämre än baseline på spikdagar.
+- **Spikdagar.** En spikdag är en dag där det verkliga högsta priset hör till de 10 % högsta i testperioden (39 dagar). På spikdagar är felet för högsta pris ungefär dubbelt så stort som på vanliga dagar för båda modellerna (ca 1,05 kr/kWh mot 0,40–0,51). Random Forest är tydligt bättre än baseline på vanliga dagar, men på spikdagar är felet för högsta pris nästan lika stort (1,050 mot 1,054). För dagsmedel och lägsta pris är RF till och med sämre än baseline på spikdagar (0,629 mot 0,584 och 0,540 mot 0,418).
 
-- **Vintern och lägsta pris.** Random Forest hade större fel än baseline för lägsta pris på vintern (MAE 0,344 mot 0,270). Bias var −0,265, alltså förutsade RF i genomsnitt för lågt pris. Under övriga årstider var bias nära noll. Grafen i notebooken visar att prisnivån steg kraftigt från mitten av januari 2026 och att RF inte följde med.
+- **Vintern och lägsta pris.** Random Forest hade större fel än baseline för lägsta pris på vintern (MAE 0,345 mot 0,270). Bias var −0,265, alltså förutsade RF i genomsnitt för lågt pris. Under övriga årstider var bias nära noll. Vinterns priser låg inom träningsdatans intervall, så felet beror inte på att modellen inte kan extrapolera. I stället var dygnen ovanligt platta: från mitten av januari till mars låg lägsta pris på ungefär 63 % av dagsmedlet, mot 37 % under tidigare vintrar i träningsdatan. RF förutsade lägsta pris som om det gamla förhållandet gällde (0,906 × 0,37 ≈ 0,34, mot RF:s genomsnittliga prognos 0,33). Baselinen kopierar förra veckans lägsta pris och följde därför nivån bättre. Varför dygnen var plattare har vi inte undersökt.
 
-- **Hösten.** Hösten hade störst fel för baseline (alla målvärden) och för högsta pris hos RF. En förklaring är att de flesta spikdagarna låg på hösten (16 av 38). En annan är att hösten finns med två gånger i testperioden, från två olika år.
+- **Hösten.** Hösten hade störst fel för baseline (alla målvärden) och för högsta pris och dagsmedel hos RF. En förklaring är att de flesta spikdagarna låg på hösten (17 av 39). En annan är att hösten finns med två gånger i testperioden, från två olika år.
 
-- **Längre prognoser.** Random Forests fel ökar något med antalet dagar framåt, från 0,270 dag 1 till 0,313 dag 7 för dagsmedel. Baselinens fel är ungefär lika stort alla dagar.
+- **Längre prognoser.** Random Forests fel ökar något med antalet dagar framåt, från 0,273 dag 1 till 0,316 dag 7 för dagsmedel. Baselinens fel är ungefär lika stort alla dagar.
 
 ## Begränsningar i data
 
@@ -47,8 +47,9 @@ Tabellerna finns i `results/mae_by_season.csv`, `results/bias_by_season.csv` och
 
 ## Begränsningar i metoden
 
-- **Random Forest tränas en gång.** Modellen tränas på data fram till hösten 2025 och tränas inte om under testperioden. Den kan därför inte anpassa sig när prisnivån ändras.
-- **Random Forest kan inte extrapolera.** Modellen förutsäger medelvärden av det den har sett i träningen. Den har därför svårt att förutsäga priser som är högre eller lägre än tidigare.
+- **Random Forest tränas en gång.** Modellen tränas på data fram till hösten 2025 och tränas inte om under testperioden. Den kan därför inte anpassa sig när prisnivån eller prismönstret ändras.
+- **Prognosen för lägsta pris bygger på ett stabilt förhållande till medelpriset.** RF lutar sig mest mot rullande medelvärden (feature importance 0,60, varav mean_rolling_7 0,36). När förhållandet mellan lägsta pris och medelpris ändras, som vintern 2026, blir prognosen för lägsta pris systematiskt fel.
+- **Random Forest kan inte extrapolera.** Modellen förutsäger medelvärden av det den har sett i träningen och kan inte förutsäga priser utanför det intervallet. Det förklarade inte vinterfelet, men kan bli ett problem om priserna blir mycket högre eller lägre än tidigare.
 - **Bara prishistorik och kalender som features.** Modellen vet inget om väder, bränslepriser eller produktion, som ofta förklarar stora prisförändringar.
 - **Standardinställningar.** Random Forest körs med 200 träd och sklearns standardinställningar, utan hyperparameteroptimering. En modell förutsäger alla tre målvärden och alla sju prognosdagar samtidigt.
 - **Baseline använder inte dagens priser.** Baselinen tittar bara på samma veckodag förra veckan. Det gör den enkel och stabil, men långsam när prisnivån ändras.
@@ -57,11 +58,11 @@ Tabellerna finns i `results/mae_by_season.csv`, `results/bias_by_season.csv` och
 
 ## När prognosen inte ska användas
 
-- **På spikdagar.** Felet för högsta pris är ungefär dubbelt så stort som vanliga dagar, och Random Forest är inte bättre än baseline. Ett hushåll kan alltså inte lita på prognosen för att undvika de dyraste dagarna.
+- **På spikdagar.** Felet för högsta pris är ungefär dubbelt så stort som vanliga dagar, och Random Forest är inte tydligt bättre än baseline. Ett hushåll kan alltså inte lita på prognosen för att undvika de dyraste dagarna.
 
-- **På vintern, särskilt för lägsta pris.** Random Forest hade större fel än baseline (MAE 0,344 mot 0,270) och förutsade för lågt pris (bias −0,265). Från mitten av januari 2026 steg prisnivån kraftigt och RF följde inte med. Ett hushåll kan då tro att en dag är billigare än den är. På vintern bör man därför jämföra RF med baseline: om modellerna skiljer sig mycket är prognosen osäker.
+- **På vintern, särskilt för lägsta pris.** Random Forest hade större fel än baseline (MAE 0,345 mot 0,270) och förutsade för lågt pris (bias −0,265). Ett hushåll kan då tro att en dag är billigare än den är. På vintern bör man därför jämföra RF med baseline: om modellerna skiljer sig mycket är prognosen osäker.
 
-- **När prisnivån plötsligt ändras.** Random Forest tränades bara en gång, på data fram till hösten 2025, och lär sig inte av nya priser under testperioden. När priserna plötsligt stiger eller sjunker följer RF därför inte med. Baseline följer efter, men först en vecka senare. De första veckorna efter en stor förändring är alltså båda modellerna osäkra.
+- **När prisnivån eller prismönstret plötsligt ändras.** Random Forest tränades bara en gång, på data fram till hösten 2025, och lär sig inte av nya priser under testperioden. När priserna eller förhållandet mellan dygnets priser plötsligt ändras följer RF därför inte med. Baseline följer efter, men först en vecka senare. De första veckorna efter en stor förändring är alltså båda modellerna osäkra.
 
 - **Som en prognos för elräkningen.** Prognosen gäller bara spotpriset i SE3. Skatt, moms, nätavgift och elhandlarens påslag ingår inte. Prognosen visar därför när el är relativt billig eller dyr, men inte vad hushållet faktiskt kommer att betala.
 
@@ -69,8 +70,9 @@ Tabellerna finns i `results/mae_by_season.csv`, `results/bias_by_season.csv` och
 
 Varje förslag bygger på ett fynd från felanalysen.
 
-- **Träna om modellen regelbundet (expanderande fönster).** RF följde inte prisnivån i januari 2026 eftersom den bara tränades en gång. Om modellen tränas om varje vecka med all data fram till prognosdagen kan den anpassa sig snabbare. Demon i `forecast.py` gör redan detta, men nästa steg är att även utvärdera modellen på samma sätt, så att siffrorna gäller den modell som faktiskt används.
+- **Träna om modellen regelbundet (expanderande fönster).** RF följde inte förändringen vintern 2026 eftersom den bara tränades en gång. Om modellen tränas om varje vecka med all data fram till prognosdagen kan den anpassa sig snabbare. Demon i `forecast.py` gör redan detta, men nästa steg är att även utvärdera modellen på samma sätt, så att siffrorna gäller den modell som faktiskt används.
+- **Features för dygnets form.** Lägg till features som beskriver förhållandet mellan lägsta pris och medelpris de senaste dagarna, så att modellen märker när dygnen blir plattare.
 - **Lägg till väderprognoser.** Felen var störst på vintern och hösten, då väder påverkar priset mest. Temperatur- och vindprognoser kan hjälpa modellen att förutse höga priser. Det kräver en källa med historiska prognoser från prognostidpunkten, till exempel Open-Meteos historiska prognoser, så att ingen framtida information läcker in.
-- **Korrigera systematiska fel.** RF:s fel på vintern var mest systematiska (bias −0,265 av MAE 0,344). En enkel korrigering baserad på de senaste veckornas fel kan minska dem.
+- **Korrigera systematiska fel.** RF:s fel för lägsta pris på vintern var mest systematiska (bias −0,265 av MAE 0,345). En enkel korrigering baserad på de senaste veckornas fel kan minska dem.
 - **Mät det användaren bryr sig om.** Mät hur ofta prognosen pekar ut rätt billigaste dag i veckan, inte bara felet i kr/kWh.
 - **Ge osäkerhet i prognosen.** Ett intervall, till exempel "mellan 0,8 och 1,2 kr/kWh", skulle visa när prognosen är osäker, särskilt på vintern och vid spikdagar.
