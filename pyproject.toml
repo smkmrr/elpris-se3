@@ -6,10 +6,10 @@ build-backend = "setuptools.build_meta"
 name = "elpris"
 version = "0.1.0"
 description = "7-day spot price forecast (daily mean, max, min) for households in SE3"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = [
-    "pandas",
-    "scikit-learn",
+    "pandas==3.0.1",
+    "scikit-learn==1.8.0",
     "httpx",
     "matplotlib",
 ]
