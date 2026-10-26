@@ -1,34 +1,46 @@
-# Elpris SE3 — 7-day spot price forecast
+# Elpris SE3 – prognos för spotpriset sju dagar framåt
 
-## Problem and purpose
-Forecast the daily mean, max and min spot price in SE3 for each of the next seven days.
+## Problem och syfte
+Prognos för dagens medel, högsta och lägsta spotpris i SE3 för var och en
+av de kommande sju dagarna. Prognosen görs varje dag kl. 12.
 
-## Target users
-Households with high electricity use, e.g. EV owners planning when to charge.
+## Målgrupp
+Hushåll med hög elförbrukning, till exempel elbilsägare som vill planera
+när de ska ladda.
 
-## Group members
+## Gruppmedlemmar
 - Bilal Mah
 - Hamed Rezaei
 - Isac Reger
 - Ali Akyel
 
-## Data source
-_TBD: source, owner, terms of use, fetch date, limitations._
+## Datakälla
+Spotpriser för elområde SE3 hämtas från API:et
+[Elpriset just nu](https://www.elprisetjustnu.se/elpris-api), som drivs av
+Beneficial Apps AS. Datan kommer ursprungligen från ENTSO-E och är fri att
+använda om källan anges. Den finns från 1 november 2021 och fram till idag.
+Priserna är i SEK per kWh, utan skatt, moms och nätavgifter.
 
-## Project structure
+Datan sparas inte i repot. Den hämtas med skriptet i steg 1 under
+"Så här kör du", och hämtningsdatumet är den dag skriptet körs.
+
+Begränsningar och detaljer om bearbetningen finns i
+[docs/datakalla.md](docs/datakalla.md).
+
+## Projektstruktur
 
 ```
-data/raw/          raw API files, one JSON per day (not in git)
-data/processed/    hourly_prices.csv and se3_daily.csv (not in git)
-docs/              data source and evaluation notes
-notebooks/         exploration (EDA, test setup, Random Forest)
-results/           final MAE table and figures (created by evaluate)
-src/elpris/        all project code
-tests/             pytest tests
+data/raw/          rådata från API:et, en JSON-fil per dag (inte i git)
+data/processed/    hourly_prices.csv och se3_daily.csv (inte i git)
+docs/              datakälla och utvärdering
+notebooks/         utforskning (EDA, testupplägg, Random Forest, felanalys)
+results/           MAE-tabeller och grafer (skapas av evaluate)
+src/elpris/        all kod i projektet
+tests/             tester med pytest
 ```
 
 ## Installation
-Requires Python 3.11 or later.
+Kräver Python 3.11 eller senare.
 
 ```bash
 git clone https://github.com/smkmrr/elpris-se3.git
@@ -40,82 +52,82 @@ pip install -e ".[dev]"
 pytest
 ```
 
-## How to run
-Run each step from the project root:
+## Så här kör du
+Kör varje steg från projektets rotmapp, i den här ordningen:
 
-| Step | Command | Output |
+| Steg | Kommando | Resultat |
 |---|---|---|
-| 1. Fetch prices | `python -m elpris.hamta_elpris` | `data/raw/` (takes 15–20 min the first time, then only new days) |
-| 2. Build hourly and daily prices | `python -m elpris.bygg_priser` | `data/processed/se3_daily.csv` |
-| 3. Compare baseline and Random Forest | `python -m elpris.evaluate` | `results/` |
-| 4. Forecast the next seven days | `python -m elpris.forecast` | table printed in the terminal |
+| 1. Hämta priser | `python -m elpris.hamta_elpris` | `data/raw/` (tar 15–20 min första gången, sedan hämtas bara nya dagar) |
+| 2. Räkna tim- och dagspriser | `python -m elpris.bygg_priser` | `data/processed/se3_daily.csv` |
+| 3. Jämför baseline och Random Forest | `python -m elpris.evaluate` | `results/` |
+| 4. Prognos för kommande sju dagar | `python -m elpris.forecast` | tabell i terminalen |
 
-## Methods
-_TBD: baseline and Random Forest._
+Prognosen använder Random Forest som standard, eftersom den hade lägst MAE i
+utvärderingen. Vill du använda baseline i stället:
 
-## Results
-_TBD_
+```bash
+python -m elpris.forecast --model baseline
+```
 
-## Limitations
-_TBD_
+## Metod
+Varje dag D kl. 12 görs en prognos för dag D+1 till D+7. Då räknas bara
+priser till och med dag D som kända, eftersom morgondagens priser
+publiceras först omkring kl. 13. Prognosen gäller tre värden per dag:
+medelpris, högsta pris och lägsta pris.
 
-## Use of generative AI
-_TBD_
+**Baseline:** priset för en måldag gissas vara detsamma som samma veckodag
+en vecka tidigare. Den är enkel och fungerar som jämförelse.
 
-## License
-_TBD_
+**Random Forest:** en modell som lär sig av historiken. Den använder
+priserna de senaste sju dagarna, medel, högsta och lägsta pris över de
+senaste 7 och 14 dagarna, samt veckodag och månad för måldagen och hur
+många dagar fram prognosen gäller.
+
+**Utvärdering:** modellen tränas på data före 1 oktober 2025 och testas
+på prognosdagarna 1 oktober 2025 – 15 oktober 2026. Mellan träning och test
+finns en veckas mellanrum så att ingen framtida information läcker in. Modellerna jämförs med MAE (genomsnittligt absolut fel i SEK/kWh), separat för varje prognosdag 1–7.
+
+## Resultat
+Random Forest hade lägre fel (MAE) än baseline för alla tre målvärden och
+alla sju prognosdagar under testperioden. Skillnaden är störst dag 1 och
+minskar ju längre fram prognosen gäller.
+
+| Målvärde | Dag 1: RF / baseline | Dag 7: RF / baseline |
+|---|---|---|
+| Dagsmedel | 0,27 / 0,37 (−25 %) | 0,32 / 0,36 (−13 %) |
+| Högsta pris | 0,44 / 0,57 (−24 %) | 0,48 / 0,57 (−15 %) |
+| Lägsta pris | 0,23 / 0,27 (−15 %) | 0,25 / 0,27 (−6 %) |
+
+MAE i kr/kWh. Alla siffror finns i [results/mae_table.csv](results/mae_table.csv).
+
+![MAE per prognosdag](results/mae_comparison.png)
+
+Random Forest är inte bättre i alla lägen. På dagar med mycket höga priser
+och för lägsta pris på vintern klarade sig baseline lika bra eller bättre,
+se Begränsningar.
+
+## Begränsningar
+Vad resultaten visar och inte visar, var modellerna missar, begränsningar
+i data och metod och när prognosen inte ska användas finns samlat i
+[docs/begransningar.md](docs/begransningar.md).
+
+## Användning av generativ AI
+Vi har använt Claude och ChatGPT/Codex som stöd i arbetet, främst för att:
+
+- förstå kod, felmeddelanden och begrepp som dataläckage, tidsuppdelning och backtest
+- få förslag på kod, tester och dokumentation
+- förbättra språket i texter och granska pull requests
+
+All kod har vi själva skrivit in, kört och förstått. Resultaten har vi
+kontrollerat genom att köra testerna med pytest, köra projektet från en ren
+klon, granska varandras pull requests och jämföra siffror mellan oberoende
+implementationer.
+
+## Licens
+Koden är licensierad under MIT-licensen, se [LICENSE](LICENSE). Det betyder
+att andra får använda och ändra koden om de anger oss som upphovspersoner.
+
+Licensen gäller bara koden. Prisdatan kommer från Elpriset just nu, ligger
+inte i repot och omfattas av deras villkor (se Datakälla).
 
 
-## Prognosdefinition och baseline
-
-Prognosen görs varje dag D klockan 12.00 för dag D+1 till D+7.
-Detta ger flera historiska testfall och gör att felet senare kan
-redovisas separat för prognosdag 1 till 7.
-
-Vid prognostillfället betraktas spotpriserna till och med dag D
-som kända. Priserna för D+1 publiceras först omkring klockan 13.
-
-### Baseline 1
-
-För varje måldag används samma veckodag en vecka tidigare.
-
-För måldagen D+h används:
-
-`D+h−7`
-
-Det betyder:
-
-- Prognosdag 1 använder dag D−6.
-- Prognosdag 2 använder dag D−5.
-- Prognosdag 3 använder dag D−4.
-- Prognosdag 4 använder dag D−3.
-- Prognosdag 5 använder dag D−2.
-- Prognosdag 6 använder dag D−1.
-- Prognosdag 7 använder dag D.
-
-Baselinen förutsäger följande tre dagsvärden:
-
-- Dagsmedel
-- Högsta dagspris
-- Lägsta dagspris
-
-Dagstabellen ska innehålla kolumnerna:
-
-- `date`
-- `mean`
-- `max`
-- `min`
-
-Baseline-funktionen returnerar sju prognosrader med
-`forecast_date`, `target_date`, `horizon`, `source_date`,
-`mean`, `max` och `min`.
-
-Kolumnen `source_date` visar vilken historisk dag prognosen
-hämtades från och kan användas för att kontrollera att ingen
-framtida information har använts.
-
-### Baseline 2
-
-En andra baseline där dag D:s värden används för samtliga sju
-prognosdagar är valfri och har inte implementerats i den första
-versionen.
