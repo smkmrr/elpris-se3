@@ -28,7 +28,7 @@ tests/             pytest tests
 ```
 
 ## Installation
-Requires Python 3.10 or later.
+Requires Python 3.11 or later.
 
 ```bash
 git clone https://github.com/smkmrr/elpris-se3.git
