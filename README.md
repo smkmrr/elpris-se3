@@ -84,9 +84,8 @@ senaste 7 och 14 dagarna, samt veckodag och månad för måldagen och hur
 många dagar fram prognosen gäller.
 
 **Utvärdering:** modellen tränas på data före 1 oktober 2025 och testas
-på perioden därefter. Mellan träning och test finns en veckas mellanrum
-så att ingen framtida information läcker in. Modellerna jämförs med MAE
-(genomsnittligt absolut fel i SEK/kWh), separat för varje prognosdag 1–7.
+på prognosdagarna 1 oktober 2025 – 15 oktober 2026. Mellan träning och test
+finns en veckas mellanrum så att ingen framtida information läcker in. Modellerna jämförs med MAE (genomsnittligt absolut fel i SEK/kWh), separat för varje prognosdag 1–7.
 
 ## Results
 _TBD_
