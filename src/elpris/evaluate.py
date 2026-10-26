@@ -38,6 +38,8 @@ def prediction_keys(predictions):
 
 
 def evaluate(daily):
+
+    daily = limit_to_test_end(daily)
     origins = valid_origins(
         daily,
         history_days=HISTORY_DAYS,
@@ -76,7 +78,7 @@ def evaluate(daily):
 
 
 def main():
-    daily = limit_to_test_end(load_daily)
+    daily = load_daily()
     predictions, table = evaluate(daily)
 
     RESULTS_DIR.mkdir(
