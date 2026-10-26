@@ -87,8 +87,24 @@ många dagar fram prognosen gäller.
 på prognosdagarna 1 oktober 2025 – 15 oktober 2026. Mellan träning och test
 finns en veckas mellanrum så att ingen framtida information läcker in. Modellerna jämförs med MAE (genomsnittligt absolut fel i SEK/kWh), separat för varje prognosdag 1–7.
 
-## Results
-_TBD_
+## Resultat
+Random Forest hade lägre fel (MAE) än baseline för alla tre målvärden och
+alla sju prognosdagar under testperioden. Skillnaden är störst dag 1 och
+minskar ju längre fram prognosen gäller.
+
+| Målvärde | Dag 1: RF / baseline | Dag 7: RF / baseline |
+|---|---|---|
+| Dagsmedel | 0,27 / 0,37 (−25 %) | 0,32 / 0,36 (−13 %) |
+| Högsta pris | 0,44 / 0,57 (−24 %) | 0,48 / 0,57 (−15 %) |
+| Lägsta pris | 0,23 / 0,27 (−15 %) | 0,25 / 0,27 (−6 %) |
+
+MAE i kr/kWh. Alla siffror finns i [results/mae_table.csv](results/mae_table.csv).
+
+![MAE per prognosdag](results/mae_comparison.png)
+
+Random Forest är inte bättre i alla lägen. På dagar med mycket höga priser
+och för lägsta pris på vintern klarade sig baseline lika bra eller bättre,
+se Begränsningar.
 
 ## Begränsningar
 Vad resultaten visar och inte visar, var modellerna missar, begränsningar
