@@ -12,7 +12,7 @@
 - Priserna räknas om från euro till kronor av källan och kan avvika något från officiella priser.
 - Före 1 oktober 2025 finns ett pris per timme, därefter ett per kvart. Vi räknar om kvartspriserna till timmedel.
 - Priset gäller hela elområde SE3, inte bara Stockholm.
-- November och december 2022 påverkades av energikrisen och har ovanligt höga priser.
+- Sensommaren och hösten 2022 påverkades av energikrisen och har ovanligt höga priser (som högst 8,56 kr/kWh den 30 augusti 2022).
 - En timme saknas i källans data (4 november 2021). Dagsvärdena för den dagen är räknade på 23 timmar
 
 ### Så här hämtas och bearbetas datan
