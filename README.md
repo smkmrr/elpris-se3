@@ -40,7 +40,7 @@ tests/             tester med pytest
 ```
 
 ## Installation
-Kräver Python 3.10 eller senare.
+Kräver Python 3.11 eller senare.
 
 ```bash
 git clone https://github.com/smkmrr/elpris-se3.git
