@@ -10,6 +10,16 @@ HORIZONS = range(1, 8)
 TEST_START = date(2025, 10, 1)
 HISTORY_DAYS = 14
 
+# Beslutat inför kodfrysen: sista prognosdag i testperioden
+TEST_END = date(2026, 10, 15)
+
+
+def limit_to_test_end(daily: pd.DataFrame, test_end: date = TEST_END) -> pd.DataFrame:
+    """Behåll bara data fram till test_end + 7 dagar.
+      då blir test_end den  sista prognosdagen."""
+    dates = pd.to_datetime(daily["date"])
+    return daily[dates <= pd.Timestamp(test_end) + pd.Timedelta(days=7)].copy()
+
 
 def available_at_noon(daily: pd.DataFrame, forecast_date: date) -> pd.DataFrame:
     """Dagsvärden som var kända kl. 12 på forecast_date."""
