@@ -62,7 +62,7 @@ fig = plot_mae_by_horizon(table, "baseline")
   kända kl. 12 dag D. Fångar skillnaden mellan vardagar och helger, som syns i EDA:n.
 
 
-## A1 – Slutliga resultat
+## Slutliga resultat
 
 Vi jämförde Random Forest med baselinen på samma testperiod: prognosdatum
 från 2025-10-01 till och med 2026-10-15. Datan består av dagspriser för
