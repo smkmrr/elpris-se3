@@ -8,11 +8,18 @@ av de kommande sju dagarna. Prognosen görs varje dag kl. 12.
 Hushåll med hög elförbrukning, till exempel elbilsägare som vill planera
 när de ska ladda.
 
-## Gruppmedlemmar
-- Bilal Mah
-- Hamed Rezaei
-- Isac Reger
-- Ali Akyel
+## Gruppmedlemmar och ansvarsfördelning
+- **Isac Reger:** första versionen av datahämtningen, EDA, backtest (`backtest.py`), prognos-CLI (`forecast.py`), README, `docs/datakalla.md` och `docs/utvardering.md`
+- **Bilal Mah:** baseline, features, utvärderingsflödet (`evaluate.py`) och resultaten i `results/`
+- **Hamed Rezaei:** testupplägg, tidsuppdelning och läckageskydd (`splits.py` med tester), låst testperiod (`TEST_END`), felanalys per säsong, bias och topp-dagar (`metrics.py`) och `docs/begransningar.md`
+- **Ali Akyel:** repo och GitHub Projects-board, Random Forest, paketering av hämtning/beräkning med tester, versionslåsning och reproducerbarhetskontroll
+
+## Projektplanering
+Arbetet planerades och följdes upp i GitHub Projects:
+https://github.com/users/smkmrr/projects/1
+
+## Presentation
+Presentationen från den muntliga redovisningen: [docs/presentation.pdf](docs/presentation.pdf)
 
 ## Datakälla
 Spotpriser för elområde SE3 hämtas från API:et
